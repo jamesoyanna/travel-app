@@ -20,12 +20,13 @@ app.use((req, res, next) => {
   next(error);
 });
 
+// eslint-disable-next-line no-unused-vars
 app.use((error, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   res.statusCode(statusCode);
   res.json({
     message: error.message,
-    stack: error.stack,
+    stack: process.env.NODE_ENV === 'production' ? 'none' : error.stack,
   });
 });
 
