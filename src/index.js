@@ -4,23 +4,33 @@ const helmet = require('helmet');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const middlewares = require('./middleware');
+const logs = require('./api/logs');
 
 require('dotenv').config();
 
 const app = express();
+
 mongoose.connect(process.env.DATABASE_URL, {
   useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
 });
 
 app.use(morgan('common'));
 app.use(helmet());
-app.use(cors({
-  origin: 'http://localhost:300',
-}));
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+  }),
+);
+
+app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Hello world' });
+  res.json({ message: 'Hello world i am coming' });
 });
+
+app.use('/api/logs', logs);
 
 app.use(middlewares.notFound);
 
